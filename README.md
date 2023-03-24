@@ -17,3 +17,5 @@ STEPS FOLLOWED
 
 - logged in ssh using the pem key
 - tested via w3m the site was reacheable
+
+http://13.41.203.155/
