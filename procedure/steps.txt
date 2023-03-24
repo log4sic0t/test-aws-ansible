@@ -1,0 +1,309 @@
+log4sic0t  ~  docker pull ubuntu 
+Using default tag: latest
+latest: Pulling from library/ubuntu
+Digest: sha256:67211c14fa74f070d27cc59d69a7fa9aeff8e28ea118ef3babc295a0428a6d21
+Status: Image is up to date for ubuntu:latest
+docker.io/library/ubuntu:latest
+
+log4sic0t  ~  docker images
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+ubuntu       latest    08d22c0ceb15   2 weeks ago   77.8MB
+
+log4sic0t  ~  docker run --name log4sic0t -it -d 08d22c0ceb15 /bin/bash
+log4sic0t  ~  docker exec -it log4sic0t  /bin/bash
+
+-----------------------------------------------
+root@3685fc7f33bf:/~# apt update -y ; apt install groff grep iputils-ping less curl vim zip unzip ssh -y
+
+root@3685fc7f33bf:/~# cat /etc/lsb-release
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=22.04
+DISTRIB_CODENAME=jammy
+DISTRIB_DESCRIPTION="Ubuntu 22.04.2 LTS"
+
+-----------------------------------------------  
+root@3685fc7f33bf:/~# curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && unzip awscliv2.zip && ./aws/install
+
+root@4c889e88abce:~# aws configure
+AWS Access Key ID [None]: 
+AWS Secret Access Key [None]: 
+Default region name [None]: 
+Default output format [None]:
+
+root@3685fc7f33bf:~# /usr/local/bin/aws ec2 create-key-pair --key-name mykey-test --query 'KeyMaterial' --output text > mykey-test.pem
+root@3685fc7f33bf:~# /usr/local/bin/aws ec2 create-security-group --group-name mysg-test --description "mysg-test"
+{
+    "GroupId": "sg-0da94c5a0c6a74e1a"
+}
+
+root@3685fc7f33bf:~# /usr/local/bin/aws ec2 authorize-security-group-ingress --group-id sg-0da94c5a0c6a74e1a --protocol tcp --port 22 --cidr 0.0.0.0/0 
+{
+    "Return": true,
+    "SecurityGroupRules": [
+        {
+            "SecurityGroupRuleId": "sgr-08ee3b11a95c2b887",
+            "GroupId": "sg-0da94c5a0c6a74e1a",
+            "GroupOwnerId": "291594623576",
+            "IsEgress": false,
+            "IpProtocol": "tcp",
+            "FromPort": 22,
+            "ToPort": 22,
+            "CidrIpv4": "0.0.0.0/0"
+        }
+    ]
+}
+
+root@3685fc7f33bf:~# /usr/local/bin/aws ec2 authorize-security-group-ingress --group-id sg-0da94c5a0c6a74e1a --protocol tcp --port 80 --cidr 0.0.0.0/0
+{
+    "Return": true,
+    "SecurityGroupRules": [
+        {
+            "SecurityGroupRuleId": "sgr-0f9b7dc836820ce59",
+            "GroupId": "sg-0da94c5a0c6a74e1a",
+            "GroupOwnerId": "291594623576",
+            "IsEgress": false,
+            "IpProtocol": "tcp",
+            "FromPort": 80,
+            "ToPort": 80,
+            "CidrIpv4": "0.0.0.0/0"
+        }
+    ]
+}
+
+root@3685fc7f33bf:~# /usr/local/bin/aws ec2 run-instances --image-id ami-0aaa5410833273cfe --count 1 --instance-type t2.micro --key-name mykey-test --security-group-ids sg-0da94c5a0c6a74e1a
+{
+    "Groups": [],
+    "Instances": [
+        {
+            "AmiLaunchIndex": 0,
+            "ImageId": "ami-0aaa5410833273cfe",
+            "InstanceId": "i-0871246d0dae4efa8",
+            "InstanceType": "t2.micro",
+            "KeyName": "mykey-test",
+            "LaunchTime": "2023-03-23T17:37:50+00:00",
+            "Monitoring": {
+                "State": "disabled"
+            },
+            "Placement": {
+                "AvailabilityZone": "eu-west-2b",
+                "GroupName": "",
+                "Tenancy": "default"
+            },
+            "PrivateDnsName": "ip-172-31-43-32.eu-west-2.compute.internal",
+            "PrivateIpAddress": "172.31.43.32",
+            "ProductCodes": [],
+            "PublicDnsName": "",
+            "State": {
+                "Code": 0,
+                "Name": "pending"
+            },
+            "StateTransitionReason": "",
+            "SubnetId": "subnet-0164b9dc81abf3330",
+            "VpcId": "vpc-0cc5736d069e079ea",
+            "Architecture": "x86_64",
+            "BlockDeviceMappings": [],
+            "ClientToken": "ee36548f-cf2e-4cd2-8066-d0af25571503",
+            "EbsOptimized": false,
+            "EnaSupport": true,
+            "Hypervisor": "xen",
+            "NetworkInterfaces": [
+                {
+                    "Attachment": {
+                        "AttachTime": "2023-03-23T17:37:50+00:00",
+                        "AttachmentId": "eni-attach-0c388bfb3839b3045",
+                        "DeleteOnTermination": true,
+                        "DeviceIndex": 0,
+                        "Status": "attaching",
+                        "NetworkCardIndex": 0
+                    },
+                    "Description": "",
+                    "Groups": [
+                        {
+                            "GroupName": "mysg-test",
+                            "GroupId": "sg-0da94c5a0c6a74e1a"
+                        }
+                    ],
+                    "Ipv6Addresses": [],
+                    "MacAddress": "0a:93:45:0e:6b:94",
+                    "NetworkInterfaceId": "eni-02c437af7a4c8ba88",
+                    "OwnerId": "291594623576",
+                    "PrivateDnsName": "ip-172-31-43-32.eu-west-2.compute.internal",
+                    "PrivateIpAddress": "172.31.43.32",
+                    "PrivateIpAddresses": [
+                        {
+                            "Primary": true,
+                            "PrivateDnsName": "ip-172-31-43-32.eu-west-2.compute.internal",
+                            "PrivateIpAddress": "172.31.43.32"
+                        }
+                    ],
+                    "SourceDestCheck": true,
+                    "Status": "in-use",
+                    "SubnetId": "subnet-0164b9dc81abf3330",
+                    "VpcId": "vpc-0cc5736d069e079ea",
+                    "InterfaceType": "interface"
+                }
+            ],
+            "RootDeviceName": "/dev/sda1",
+            "RootDeviceType": "ebs",
+            "SecurityGroups": [
+                {
+                    "GroupName": "mysg-test",
+                    "GroupId": "sg-0da94c5a0c6a74e1a"
+                }
+            ],
+            "SourceDestCheck": true,
+            "StateReason": {
+                "Code": "pending",
+                "Message": "pending"
+            },
+            "VirtualizationType": "hvm",
+            "CpuOptions": {
+                "CoreCount": 1,
+                "ThreadsPerCore": 1
+            },
+            "CapacityReservationSpecification": {
+                "CapacityReservationPreference": "open"
+            },
+            "MetadataOptions": {
+                "State": "pending",
+                "HttpTokens": "optional",
+                "HttpPutResponseHopLimit": 1,
+                "HttpEndpoint": "enabled",
+                "HttpProtocolIpv6": "disabled",
+                "InstanceMetadataTags": "disabled"
+            },
+            "EnclaveOptions": {
+                "Enabled": false
+            },
+            "PrivateDnsNameOptions": {
+                "HostnameType": "ip-name",
+                "EnableResourceNameDnsARecord": false,
+                "EnableResourceNameDnsAAAARecord": false
+            },
+            "MaintenanceOptions": {
+                "AutoRecovery": "default"
+            },
+            "CurrentInstanceBootMode": "legacy-bios"
+        }
+    ],
+    "OwnerId": "291594623576",
+    "ReservationId": "r-00f3a23522549f969"
+}
+
+
+root@3685fc7f33bf:~# apt install ansible
+root@3685fc7f33bf:~# vim /etc/ansible/hosts
+root@3685fc7f33bf:~# ansible-inventory --list -y
+all:
+  children:
+    servers:
+      hosts:
+        ubuntu:
+          ansible_host: 13.41.203.155
+          ansible_python_interpreter: /usr/bin/python3
+    ungrouped: {}
+root@3685fc7f33bf:~# chmod 400 mykey-test.pem
+root@3685fc7f33bf:~# ansible all -m ping -u ubuntu
+ubuntu | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+
+root@3685fc7f33bf:~# vim ansible-playbook.yml
+----
+- name: Install and configure nginx on Ubuntu
+  hosts: all
+  become: true
+  tasks:
+
+    - name: Update system
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      become: true
+
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: latest
+      become: true
+
+    - name: Copy files to nginx directory
+      copy:
+        src: /root/html-demo-log4sic0t/
+        dest: /var/www/html/
+
+
+-----------------------------------------------  
+root@3685fc7f33bf:~# ansible-playbook ansible-playbook.yml -u ubuntu
+
+PLAY [Install and configure nginx on Ubuntu] ***************************************************************************************************************************************
+
+TASK [Gathering Facts] *************************************************************************************************************************************************************
+ok: [ubuntu]
+
+TASK [Update system] ***************************************************************************************************************************************************************
+changed: [ubuntu]
+
+TASK [Install nginx] ***************************************************************************************************************************************************************
+changed: [ubuntu]
+
+TASK [Copy files to nginx directory] ***********************************************************************************************************************************************
+changed: [ubuntu]
+
+PLAY RECAP *************************************************************************************************************************************************************************
+ubuntu                     : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+
+-----------------------------------------------
+root@3685fc7f33bf:~# ssh -i mykey-test.pem ubuntu@13.41.203.155
+Welcome to Ubuntu 22.04.1 LTS (GNU/Linux 5.15.0-1028-aws x86_64)
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Thu Mar 23 17:50:45 UTC 2023
+
+  System load:  0.0               Processes:             95
+  Usage of /:   19.8% of 7.57GB   Users logged in:       0
+  Memory usage: 19%               IPv4 address for eth0: 172.31.43.32
+  Swap usage:   0%
+
+ubuntu@ip-172-31-43-32:~$ systemctl status nginx.service
+● nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2023-03-23 19:36:04 UTC; 1min 49s ago
+       Docs: man:nginx(8)
+    Process: 3211 ExecStartPre=/usr/sbin/nginx -t -q -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+    Process: 3212 ExecStart=/usr/sbin/nginx -g daemon on; master_process on; (code=exited, status=0/SUCCESS)
+   Main PID: 3305 (nginx)
+      Tasks: 2 (limit: 1143)
+     Memory: 4.6M
+        CPU: 23ms
+     CGroup: /system.slice/nginx.service
+             ├─3305 "nginx: master process /usr/sbin/nginx -g daemon on; master_process on;"
+             
+-----------------------------------------------                  
+log4sic0t  ~  nmap 13.41.203.155
+Starting Nmap 7.80 ( https://nmap.org ) at 2023-03-23 20:16 GMT
+Nmap scan report for ec2-13-41-203-155.eu-west-2.compute.amazonaws.com (13.41.203.155)
+Host is up (0.022s latency).
+Not shown: 997 filtered ports
+PORT   STATE  SERVICE
+22/tcp open   ssh
+53/tcp closed domain
+80/tcp open   http
+Nmap done: 1 IP address (1 host up) scanned in 5.06 seconds
+
+-----------------------------------------------  
+log4sic0t  ~  w3m 13.41.203.155
+ free as a bird (?)
+
+   centered image
+
+log4sic0t test website
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+From Lorem Ipsum Generator https://loremipsum.io/generator/

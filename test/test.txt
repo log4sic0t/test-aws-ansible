@@ -1,0 +1,27 @@
+===============================
+LINUX
+1) What is the 1st line of a bash script?
+#!/bin/bash
+
+2) Find all of the processes started by a particular user and kill them in a one liner.
+ps -ef | grep log4sic0t | awk '{ print $2 }' | sudo xargs kill -9
+
+3) On a linux router machine completely block access for an IP
+sudo iptables -A INPUT -s xxx.xxx.xxx.xxx -j DROP
+
+4) Change DNS locally on the server to use Google's 8.8.8.8 server in one line.
+cp /etc/resolv.conf /etc/resolv.conf.bck ; echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
+5) Find all files newer than 5 days on a specific folder and delete them, one line command.
+find /home/dir1 -type f -mtime -5 -ok rm {} \;
+ 
+===============================
+AWS
+1)Create an automated way to deploy an AWS instance (free tier) that is running Nginx (port 80) webservice.
+I choose ansible from a docker container where awscli is configured
+
+2)This will point to a html file that has to display a text page (your choice).
+http://13.41.203.155/
+
+3)Share this on a Github project link and the URL to access the webservice.
+https://github.com/log4sic0t/test-aws-ansible

@@ -1,0 +1,21 @@
+- name: Install and configure nginx on Ubuntu
+  hosts: all
+  become: true
+  tasks:
+
+    - name: Update system
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      become: true
+
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: latest
+      become: true
+
+    - name: Copy files to nginx directory
+      copy:
+        src: /root/html-demo-log4sic0t/
+        dest: /var/www/html/
